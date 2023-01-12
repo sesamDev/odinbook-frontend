@@ -1,0 +1,19 @@
+.friend-card > .friend-info {
+  display: flex;
+  align-items: center;
+}
+
+.friend-info > img {
+  border-radius: 50%;
+  height: 72px;
+  margin: 1rem 0.5rem;
+}
+
+.friend-info:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.num-of-friends {
+  margin-top: 1rem;
+  margin-left: 0.5rem;
+}
