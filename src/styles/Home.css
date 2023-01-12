@@ -1,0 +1,8 @@
+.app-home > .home-bottom {
+  text-align: center;
+  margin: 0.5rem 0;
+  color: rgb(57 117 234);
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+}

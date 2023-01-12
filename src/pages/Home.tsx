@@ -6,7 +6,7 @@ import { USERS } from "../data/faker";
 
 function Home() {
   return (
-    <div>
+    <div className="app-home">
       {USERS.map((u) => {
         return (
           <>
@@ -15,6 +15,9 @@ function Home() {
           </>
         );
       })}
+      <div className="home-bottom" onClick={() => window.scrollTo(top)}>
+        Back to top
+      </div>
     </div>
   );
 }
