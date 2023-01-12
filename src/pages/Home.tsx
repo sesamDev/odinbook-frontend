@@ -15,7 +15,7 @@ function Home() {
           </>
         );
       })}
-      <div className="home-bottom" onClick={() => window.scrollTo(top)}>
+      <div className="home-bottom" onClick={() => window.scrollTo(0, 0)}>
         Back to top
       </div>
     </div>
