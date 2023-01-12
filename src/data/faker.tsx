@@ -5,6 +5,7 @@ export type User = {
   userId: string;
   fullname: string;
   avatar: string;
+  postImg: string;
 };
 
 export const USERS: User[] = [];
@@ -14,6 +15,7 @@ export function createRandomUser(): User {
     userId: faker.datatype.uuid(),
     fullname: faker.internet.userName(),
     avatar: faker.image.avatar(),
+    postImg: faker.image.animals(640, 640, true),
   };
 }
 
