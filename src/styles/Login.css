@@ -1,0 +1,59 @@
+.app-login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.app-login > h1 {
+  font-size: 3rem;
+  color: rgb(57 117 234);
+}
+
+.app-login > .login-form {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-login > .login-form > button {
+  width: 100%;
+  height: 40px;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  color: rgb(57 117 234);
+  font-size: 1.2rem;
+  font-weight: 700;
+  background-color: rgba(226, 226, 226, 0.376);
+}
+
+.app-login > .login-form > .login-input {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem 0;
+}
+
+.app-login > .login-form > .login-input > input {
+  height: 40px;
+  font-size: 1.2rem;
+  padding-left: 1rem;
+}
+
+.app-login > .login-facebook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.app-login > .register-account {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3rem;
+}
