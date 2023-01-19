@@ -1,5 +1,7 @@
 import "../styles/Login.css";
 
+import { getCurrentUser, setJwtToken } from "../auth";
+
 import React from "react";
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -11,24 +13,45 @@ interface LoginFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-function Login() {
-  async function handleSubmit(e: React.FormEvent<LoginFormElement>): Promise<void> {
-    e.preventDefault();
-    const email: string = e.currentTarget.elements.email.value;
-    const password: string = e.currentTarget.elements.password.value;
-    const response = await fetch("http://127.0.0.1:3000/api/v1/auth/login", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-type": "application/x-www-form-urlencoded",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
+async function login(email: string, password: string) {
+  const response = await fetch("http://127.0.0.1:3000/api/v1/auth/login", {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-type": "application/JSON",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  });
 
-    return console.log(response.status);
+  return response.json();
+}
+
+function Login() {
+  async function handleSubmit(e?: React.FormEvent<LoginFormElement>) {
+    let email: string;
+    let password: string;
+
+    if (!e) {
+      email = "testuser@odinbook";
+      password = "111111";
+    } else {
+      e.preventDefault();
+
+      email = e.currentTarget.elements.email.value;
+      password = e.currentTarget.elements.password.value;
+    }
+
+    if (email === undefined || password === undefined) {
+      throw new Error("Login error");
+    }
+    const auth = await login(email, password);
+    setJwtToken(auth.token);
+    if (getCurrentUser()) {
+      window.location.replace("/");
+    }
   }
   return (
     <div className="app-login">
@@ -48,7 +71,9 @@ function Login() {
           <input type="password" name="password" required minLength={6} />
         </div>
         <button>Login</button>
-        {/* <button onClick={(e) => login(e)}>Login as test user</button> */}
+        <button type="button" onClick={() => handleSubmit()}>
+          Login as test user
+        </button>
         <div className="app-line"></div>
       </form>
       <div className="login-facebook">
