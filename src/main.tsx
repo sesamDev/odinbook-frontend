@@ -10,22 +10,18 @@ import Profile from "./pages/Profile";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Register from "./pages/Register";
-
-// TEMPORARY!!!!!!!!!
-const user = {
-  authanticated: false,
-};
+import { getCurrentUser } from "./auth";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      {user.authanticated ? <Navbar /> : null}
+      {getCurrentUser() ? <Navbar /> : null}
       <Routes>
-        <Route path="/" element={user.authanticated ? <Home /> : <Navigate to="/login" />} />
-        <Route path="/login" element={user.authanticated ? <Navigate to="/" /> : <Login />} />
-        <Route path="/profile" element={user.authanticated ? <Profile /> : <Navigate to="/login" />} />
-        <Route path="/friends" element={user.authanticated ? <Friends /> : <Navigate to="/login" />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={getCurrentUser() ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/login" element={getCurrentUser() ? <Navigate to="/" /> : <Login />} />
+        <Route path="/profile" element={getCurrentUser() ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/friends" element={getCurrentUser() ? <Friends /> : <Navigate to="/login" />} />
+        <Route path="/register" element={getCurrentUser() ? <Navigate to="/" /> : <Register />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
