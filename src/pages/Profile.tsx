@@ -2,12 +2,13 @@ import "../styles/Profile.css";
 
 import React from "react";
 import { USERS } from "../data/faker";
+import { UserProp } from "../App";
 
-function Profile() {
+function Profile(props?: UserProp) {
   return (
     <div className="app-profile">
       <img className="profile-img" src={USERS[0].avatar} alt="profile" />
-      <div className="profile-name">{USERS[0].fullname}</div>
+      <div className="profile-name">{`${props?.user?.first_name} ${props?.user?.last_name}`}</div>
       <button>Edit profile</button>
       <div>
         <strong>Friends</strong>
