@@ -3,6 +3,7 @@ import "../styles/Login.css";
 import { getCurrentUser, setJwtToken } from "../auth";
 
 import React from "react";
+import { SetUserStateProp } from "../app";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -29,7 +30,7 @@ async function login(email: string, password: string) {
   return response.json();
 }
 
-function Login() {
+function Login(props: SetUserStateProp) {
   async function handleSubmit(e?: React.FormEvent<LoginFormElement>) {
     let email: string;
     let password: string;
@@ -49,9 +50,8 @@ function Login() {
     }
     const auth = await login(email, password);
     setJwtToken(auth.token);
-    if (getCurrentUser()) {
-      window.location.replace("/");
-    }
+    const user = await getCurrentUser();
+    props.setUser(user);
   }
   return (
     <div className="app-login">
