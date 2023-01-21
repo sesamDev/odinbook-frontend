@@ -30,6 +30,7 @@ async function login(email: string, password: string) {
   return response.json();
 }
 
+//TODO: Get Facebook login to work
 function Login(props: SetUserStateProp) {
   async function handleSubmit(e?: React.FormEvent<LoginFormElement>) {
     let email: string;

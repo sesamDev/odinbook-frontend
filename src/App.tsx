@@ -7,7 +7,6 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import React from "react";
 import Register from "./pages/Register";
-import { getCurrentUser } from "./auth";
 import { useState } from "react";
 
 type User = {

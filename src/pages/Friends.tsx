@@ -4,6 +4,8 @@ import FriendInfo from "../components/FriendInfo";
 import React from "react";
 import { USERS } from "../data/faker";
 
+//TODO: Get users friends
+//TODO: Implement friend request functionallity
 function Friends() {
   function countFriends(): number {
     return USERS.length;

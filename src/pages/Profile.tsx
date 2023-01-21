@@ -4,6 +4,8 @@ import React from "react";
 import { USERS } from "../data/faker";
 import { UserProp } from "../App";
 
+//TODO: Implement Edit profile
+//TODO: List users friends
 function Profile(props?: UserProp) {
   return (
     <div className="app-profile">

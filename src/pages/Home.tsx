@@ -5,6 +5,10 @@ import React from "react";
 import { USERS } from "../data/faker";
 import { UserProp } from "../App";
 
+//TODO: Get users friends posts
+//TODO: Add like functionallity
+//TODO: Add comment functionallity
+
 function Home(props: UserProp) {
   return (
     <>
