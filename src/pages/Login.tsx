@@ -3,7 +3,7 @@ import "../styles/Login.css";
 import { getCurrentUser, setJwtToken } from "../auth";
 
 import React from "react";
-import { SetUserStateProp } from "../app";
+import { SetUserStateProp } from "../App";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
