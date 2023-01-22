@@ -6,3 +6,23 @@
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+.app-home > .home-add-post {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-home > .home-add-post > button {
+  margin: 1rem 3rem;
+  white-space: nowrap;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #ffffff;
+  background-color: rgb(57 117 234);
+}
+
+.app-home > .home-add-post > button:active {
+  background-color: rgb(49, 100, 200);
+}

@@ -1,0 +1,40 @@
+.create-post-body {
+  position: absolute;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0rem;
+}
+.create-post-body > form {
+  display: flex;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.create-post-body > .create-post-header {
+  color: rgb(57 117 234);
+}
+
+.create-post-body > form > div > .create-post-status-input {
+  font-size: 1.2rem;
+  resize: none;
+  display: block;
+  margin: 1rem auto;
+  height: 50vw;
+}
+
+.create-post-body > form > button {
+  margin: 1rem 3rem;
+  white-space: nowrap;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  color: #ffffff;
+  background-color: rgb(57 117 234);
+}
