@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { CurrentUser } from "./auth";
 import Friends from "./pages/Friends";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -9,14 +10,8 @@ import React from "react";
 import Register from "./pages/Register";
 import { useState } from "react";
 
-type User = {
-  first_name: string;
-  last_name: string;
-  email_name: string;
-};
-
 export interface UserProp {
-  readonly user: undefined | User;
+  readonly user: undefined | CurrentUser;
 }
 
 export interface SetUserStateProp {

@@ -8,12 +8,13 @@ import { UserProp } from "../App";
 import { useState } from "react";
 
 //TODO: Get users friends posts
-//TODO: Create posts
+//TODO: Add images to posts
 //TODO: Add like functionallity
 //TODO: Add comment functionallity
 
 function Home(props: UserProp) {
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const user = props.user;
   return (
     <>
       <div className="app-home">
@@ -25,7 +26,7 @@ function Home(props: UserProp) {
             <div className="app-line"></div>
           </div>
         )}
-        {isCreatingPost ? <CreatePost setIsCreatingPost={setIsCreatingPost} /> : <></>}
+        {isCreatingPost ? <CreatePost setIsCreatingPost={setIsCreatingPost} user={user} /> : <></>}
         {/* {USERS.map((u) => {
           return (
             <>

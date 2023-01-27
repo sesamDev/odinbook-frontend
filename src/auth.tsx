@@ -1,5 +1,12 @@
+export type CurrentUser = {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  admin: boolean;
+};
+
 function getJwtToken() {
-  return sessionStorage.get("jwt");
+  return sessionStorage.getItem("jwt");
 }
 
 function setJwtToken(token: string) {
@@ -10,7 +17,7 @@ function deleteJwtToken() {
   return sessionStorage.removeItem("jwt");
 }
 
-async function getCurrentUser() {
+async function getCurrentUser(): Promise<CurrentUser> {
   const token = sessionStorage.getItem("jwt");
   const response = await fetch("http://localhost:3000/api/v1/user", {
     method: "GET",

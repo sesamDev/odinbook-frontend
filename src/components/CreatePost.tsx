@@ -1,24 +1,38 @@
 import "../styles/CreatePost.css";
 
 import React from "react";
+import { UserProp } from "../App";
+import { getJwtToken } from "../auth";
 
 interface SetIsCreatingPostStateProp {
   setIsCreatingPost: CallableFunction;
 }
 
 interface FormElements extends HTMLFormControlsCollection {
-  status: HTMLInputElement;
+  text: HTMLInputElement;
 }
 
 interface PostFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-function CreatePost(props: SetIsCreatingPostStateProp) {
-  function handleSubmit(e: React.FormEvent<PostFormElement>) {
+function CreatePost(props: SetIsCreatingPostStateProp & UserProp) {
+  async function handleSubmit(e: React.FormEvent<PostFormElement>) {
     e.preventDefault();
     props.setIsCreatingPost(false);
-    console.log(e.currentTarget.elements.status.value);
+
+    await fetch("http://localhost:3000/api/v1/posts", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-type": "application/JSON",
+        Authorization: `Bearer ${getJwtToken()}`,
+      },
+      body: JSON.stringify({
+        text: e.currentTarget.elements.text.value,
+        author: props.user?._id,
+      }),
+    });
   }
   return (
     <>
@@ -27,8 +41,8 @@ function CreatePost(props: SetIsCreatingPostStateProp) {
         <h1 className="create-post-header">Create post</h1>
         <form action="" onSubmit={(e: React.FormEvent<PostFormElement>) => handleSubmit(e)}>
           <div>
-            <label htmlFor="status"></label>
-            <textarea className="create-post-status-input" name="status" placeholder="Post text"></textarea>
+            <label htmlFor="text"></label>
+            <textarea className="create-post-status-input" name="text" placeholder="Post text"></textarea>
           </div>
           <div>
             <label className="create-post-upload-image" htmlFor="image"></label>
