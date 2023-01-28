@@ -5,8 +5,8 @@ import { USERS } from "../data/faker";
 import { UserProp } from "../App";
 
 //TODO: Implement Edit profile
-//TODO: List users friends
-function Profile(props?: UserProp) {
+function Profile(props: UserProp) {
+  const { user } = props;
   return (
     <div className="app-profile">
       <img className="profile-img" src={USERS[0].avatar} alt="profile" />
@@ -14,15 +14,15 @@ function Profile(props?: UserProp) {
       <button>Edit profile</button>
       <div>
         <strong>Friends</strong>
-        <p>10 friends</p>
+        <p>{user?.friends.length}</p>
       </div>
       <div className="profile-friends">
-        {USERS.map((u) => {
+        {user?.friends.map((u) => {
           return (
-            <div className="friend-container" key={u.userId}>
+            <div className="friend-container" key={u._id}>
               <img src={u.avatar} alt="" className="friend-img" />
               <div className="friend-name">
-                <strong>{u.fullname}</strong>
+                <strong>{`${u.first_name} ${u.last_name}`}</strong>
               </div>
             </div>
           );

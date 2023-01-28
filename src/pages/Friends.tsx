@@ -2,19 +2,19 @@ import "../styles/Friends.css";
 
 import FriendInfo from "../components/FriendInfo";
 import React from "react";
-import { USERS } from "../data/faker";
+import { UserProp } from "../App";
 
-//TODO: Get users friends
 //TODO: Implement friend request functionallity
-function Friends() {
-  function countFriends(): number {
-    return USERS.length;
+function Friends(props: UserProp) {
+  const { user } = props;
+  function countFriends(): number | undefined {
+    return user?.friends.length;
   }
   return (
     <div className="friend-card">
       <div className="num-of-friends">{countFriends()} friends</div>
-      {USERS?.map((u) => {
-        return <FriendInfo key={u.userId} user={u} />;
+      {user?.friends.map((u) => {
+        return <FriendInfo key={u._id} user={u} />;
       })}
     </div>
   );
