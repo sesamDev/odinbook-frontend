@@ -1,9 +1,4 @@
-export type CurrentUser = {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  admin: boolean;
-};
+import { CurrentUser } from "./types";
 
 function getJwtToken() {
   return sessionStorage.getItem("jwt");

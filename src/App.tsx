@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { CurrentUser } from "./auth";
+import { CurrentUser } from "./types";
 import Friends from "./pages/Friends";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -29,7 +29,7 @@ function App() {
         <Route path="/" element={user ? <Home user={user} /> : <Navigate to="/login" />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
         <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
-        <Route path="/friends" element={user ? <Friends /> : <Navigate to="/login" />} />
+        <Route path="/friends" element={user ? <Friends user={user} /> : <Navigate to="/login" />} />
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
       </Routes>
     </BrowserRouter>
