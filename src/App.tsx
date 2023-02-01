@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { CurrentUser } from "./types";
 import Friends from "./pages/Friends";
@@ -8,7 +9,7 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import React from "react";
 import Register from "./pages/Register";
-import { useState } from "react";
+import { getCurrentUser } from "./auth";
 
 export interface UserProp {
   readonly user: undefined | CurrentUser;
@@ -19,8 +20,12 @@ export interface SetUserStateProp {
 }
 
 function App() {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<CurrentUser>();
   console.log(user);
+
+  useEffect(() => {
+    getCurrentUser().then((user) => setUser(user));
+  }, []);
 
   return (
     <BrowserRouter>

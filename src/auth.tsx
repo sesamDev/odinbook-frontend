@@ -21,7 +21,7 @@ async function getCurrentUser(): Promise<CurrentUser> {
       Authorization: `Bearer ${token}`, // notice the Bearer before your token
     },
   });
-  const data = await response.json();
+  const data: CurrentUser = await response.json();
   return data;
 }
 
