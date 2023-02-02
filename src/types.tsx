@@ -17,6 +17,6 @@ export type PostData = {
     last_name: string;
   };
   text: string;
-  likes: [];
+  likes: string[];
   timestamp: Date;
 };
