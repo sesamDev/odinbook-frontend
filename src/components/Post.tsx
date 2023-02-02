@@ -1,13 +1,13 @@
 import "../styles/Post.css";
 
 import { CurrentUser, PostData } from "../types";
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 
 import { getJwtToken } from "../auth";
 
 interface PostProps {
   post: PostData;
-  user: CurrentUser | undefined;
+  user: CurrentUser;
 }
 const fbColor = "rgb(57 117 234)";
 
@@ -15,23 +15,35 @@ const fbColor = "rgb(57 117 234)";
 function Post(props: PostProps) {
   const { post, user } = props;
   const [postLikes, setPostLikes] = useState(() => post.likes.length);
+  const [postLiked, setPostLiked] = useState<boolean>(false);
   const [postLikeButtonColor, setPostLikeButtonColor] = useState(() => "currentColor");
 
   function handleLikeButton(e: MouseEvent) {
     e.preventDefault();
     const buttonElement = e.target as HTMLElement;
 
-    if (postLikes >= post.likes.length + 1) {
+    if (postLiked) {
       decreaseLocalLikeByOne(setPostLikes);
-      toggleLikeButtonColor(postLikeButtonColor, setPostLikeButtonColor);
+      toggleLikeButtonColor(setPostLikeButtonColor, postLiked);
       removeLikeFromDatabase(buttonElement.parentElement?.parentElement?.id, user?._id);
+      setPostLiked(false);
+
       return;
     }
 
     increaseLocalLikeByOne(setPostLikes);
-    toggleLikeButtonColor(postLikeButtonColor, setPostLikeButtonColor);
+    toggleLikeButtonColor(setPostLikeButtonColor, postLiked);
     addLikeToDatabase(buttonElement.parentElement?.parentElement?.id, user?._id);
+    setPostLiked(true);
   }
+
+  // Check if user has liked post before and light up like button
+  useEffect(() => {
+    if (post.likes.includes(user._id)) {
+      toggleLikeButtonColor(setPostLikeButtonColor, postLiked);
+      return setPostLiked(true);
+    }
+  }, []);
   return (
     <div className="post-card" id={post._id}>
       <div className="post-profile">
@@ -79,11 +91,10 @@ function Post(props: PostProps) {
 
 export default Post;
 
-function toggleLikeButtonColor(postLikeButtonColor: string, setPostLikeButtonColor: CallableFunction) {
+function toggleLikeButtonColor(setPostLikeButtonColor: CallableFunction, postLiked: boolean) {
   const fbColor = "rgb(57 117 234)";
-
-  if (postLikeButtonColor === "currentColor") return setPostLikeButtonColor(fbColor);
-  if (postLikeButtonColor === fbColor) return setPostLikeButtonColor("currentColor");
+  if (postLiked) return setPostLikeButtonColor("currentColor");
+  if (!postLiked) return setPostLikeButtonColor(fbColor);
 }
 
 function decreaseLocalLikeByOne(setLikeCount: CallableFunction) {

@@ -1,12 +1,11 @@
 import "../styles/Home.css";
 
+import { CurrentUser, PostData } from "../types";
 import { useEffect, useState } from "react";
 
 import CreatePost from "../components/CreatePost";
 import Post from "../components/Post";
-import { PostData } from "../types";
 import React from "react";
-import { UserProp } from "../App";
 import { getJwtToken } from "../auth";
 
 //TODO: Add images to posts
@@ -14,7 +13,11 @@ import { getJwtToken } from "../auth";
 //TODO: Add comment functionallity
 //FIXME: Back to top button not visible anymore
 
-function Home(props: UserProp) {
+interface HomeProps {
+  user: CurrentUser;
+}
+
+function Home(props: HomeProps) {
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const [posts, setPosts] = useState<PostData[]>();
   const user = props.user;
