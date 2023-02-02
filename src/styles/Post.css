@@ -52,6 +52,10 @@
   border-radius: 1.5rem;
 }
 
+.post-buttons > button > svg {
+  pointer-events: none;
+}
+
 .post-likes {
   padding-top: 0.3rem;
   display: flex;

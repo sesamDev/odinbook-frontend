@@ -1,18 +1,39 @@
 import "../styles/Post.css";
 
-import { PostData } from "../types";
-import React from "react";
+import { CurrentUser, PostData } from "../types";
+import React, { MouseEvent, useState } from "react";
 
-interface PostDataProp {
+import { getJwtToken } from "../auth";
+
+interface PostProps {
   post: PostData;
+  user: CurrentUser | undefined;
 }
-
 const fbColor = "rgb(57 117 234)";
 
-function Post(props: PostDataProp) {
-  const { post } = props;
+//TODO: Like button to be persistent after liked post
+function Post(props: PostProps) {
+  const { post, user } = props;
+  const [postLikes, setPostLikes] = useState(() => post.likes.length);
+  const [postLikeButtonColor, setPostLikeButtonColor] = useState(() => "currentColor");
+
+  function handleLikeButton(e: MouseEvent) {
+    e.preventDefault();
+    const buttonElement = e.target as HTMLElement;
+
+    if (postLikes >= post.likes.length + 1) {
+      decreaseLocalLikeByOne(setPostLikes);
+      toggleLikeButtonColor(postLikeButtonColor, setPostLikeButtonColor);
+      removeLikeFromDatabase(buttonElement.parentElement?.parentElement?.id, user?._id);
+      return;
+    }
+
+    increaseLocalLikeByOne(setPostLikes);
+    toggleLikeButtonColor(postLikeButtonColor, setPostLikeButtonColor);
+    addLikeToDatabase(buttonElement.parentElement?.parentElement?.id, user?._id);
+  }
   return (
-    <div className="post-card">
+    <div className="post-card" id={post._id}>
       <div className="post-profile">
         <img src={""} alt="profile" />
         <div className="profile-name-date-wrapper">
@@ -32,18 +53,18 @@ function Post(props: PostDataProp) {
             d="M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67,3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18,21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z"
           />
         </svg>
-        <p>{post.likes}</p>
+        <p>{postLikes}</p>
       </div>
       <div className="post-buttons">
-        <button>
+        <button className="post-button-like" onClick={(e) => handleLikeButton(e)}>
           <svg width="32px" height="32px" viewBox="0 0 24 24">
             <path
-              fill="currentColor"
+              fill={postLikeButtonColor}
               d="M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67,3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18,21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z"
             />
           </svg>
         </button>
-        <button>
+        <button className="post-button-comment">
           <svg width="32px" height="32px" viewBox="0 0 24 24">
             <path
               fill="currentColor"
@@ -57,3 +78,40 @@ function Post(props: PostDataProp) {
 }
 
 export default Post;
+
+function toggleLikeButtonColor(postLikeButtonColor: string, setPostLikeButtonColor: CallableFunction) {
+  const fbColor = "rgb(57 117 234)";
+
+  if (postLikeButtonColor === "currentColor") return setPostLikeButtonColor(fbColor);
+  if (postLikeButtonColor === fbColor) return setPostLikeButtonColor("currentColor");
+}
+
+function decreaseLocalLikeByOne(setLikeCount: CallableFunction) {
+  return setLikeCount((prev: number) => prev - 1);
+}
+
+function removeLikeFromDatabase(postId: string | undefined, userId: string | undefined) {
+  if (postId === undefined && userId === undefined) throw new Error("Update like");
+
+  return fetch("http://localhost:3000/api/v1/posts/like/remove?postId=" + postId + "&userId=" + userId, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getJwtToken()}`,
+    },
+  });
+}
+
+function increaseLocalLikeByOne(setLikeCount: CallableFunction) {
+  return setLikeCount((prev: number) => prev + 1);
+}
+
+async function addLikeToDatabase(postId: string | undefined, userId: string | undefined) {
+  if (postId === undefined && userId === undefined) throw new Error("Update like");
+
+  return fetch("http://localhost:3000/api/v1/posts/like/add?postId=" + postId + "&userId=" + userId, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getJwtToken()}`,
+    },
+  });
+}

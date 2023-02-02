@@ -47,7 +47,7 @@ function Home(props: UserProp) {
         {posts?.map((post) => {
           return (
             <>
-              <Post post={post} key={post._id} />
+              <Post post={post} user={user} key={post._id} />
               <div className="app-line"></div>
             </>
           );
