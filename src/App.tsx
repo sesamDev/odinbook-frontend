@@ -21,7 +21,6 @@ export interface SetUserStateProp {
 
 function App() {
   const [user, setUser] = useState<CurrentUser>();
-  console.log(user);
 
   useEffect(() => {
     getCurrentUser().then((user) => setUser(user));
