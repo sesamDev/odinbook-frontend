@@ -1,11 +1,10 @@
 import "../styles/Navbar.css";
 
+import { SetUserStateProp, fbColor } from "../App";
+
 import { Link } from "react-router-dom";
 import React from "react";
-import { SetUserStateProp } from "../App";
 import { deleteJwtToken } from "../auth";
-
-const fbColor = "rgb(57 117 234)";
 
 //FIXME: Move Logout button to the right
 function Navbar(props: SetUserStateProp) {

@@ -3,13 +3,13 @@ import "../styles/Post.css";
 import { CurrentUser, PostData } from "../types";
 import React, { MouseEvent, useEffect, useState } from "react";
 
+import { fbColor } from "../App";
 import { getJwtToken } from "../auth";
 
 interface PostProps {
   post: PostData;
   user: CurrentUser;
 }
-const fbColor = "rgb(57 117 234)";
 
 //TODO: Like button to be persistent after liked post
 function Post(props: PostProps) {
@@ -92,7 +92,6 @@ function Post(props: PostProps) {
 export default Post;
 
 function toggleLikeButtonColor(setPostLikeButtonColor: CallableFunction, postLiked: boolean) {
-  const fbColor = "rgb(57 117 234)";
   if (postLiked) return setPostLikeButtonColor("currentColor");
   if (!postLiked) return setPostLikeButtonColor(fbColor);
 }

@@ -11,6 +11,8 @@ import React from "react";
 import Register from "./pages/Register";
 import { getCurrentUser } from "./auth";
 
+export const fbColor = "rgb(57 117 234)";
+
 export interface UserProp {
   readonly user: undefined | CurrentUser;
 }
