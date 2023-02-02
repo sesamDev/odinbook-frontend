@@ -11,7 +11,6 @@ interface PostProps {
   user: CurrentUser;
 }
 
-//TODO: Like button to be persistent after liked post
 function Post(props: PostProps) {
   const { post, user } = props;
   const [postLikes, setPostLikes] = useState(() => post.likes.length);

@@ -9,7 +9,6 @@ import React from "react";
 import { getJwtToken } from "../auth";
 
 //TODO: Add images to posts
-//TODO: Add like functionallity
 //TODO: Add comment functionallity
 //FIXME: Back to top button not visible anymore
 
