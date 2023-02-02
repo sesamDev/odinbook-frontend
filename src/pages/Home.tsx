@@ -9,20 +9,10 @@ import React from "react";
 import { UserProp } from "../App";
 import { getJwtToken } from "../auth";
 
-//TODO: Get users friends posts
 //TODO: Add images to posts
 //TODO: Add like functionallity
 //TODO: Add comment functionallity
-
-// function getPosts(): Array<PostData> {
-//   const response = await fetch("http://localhost:3000/api/v1/posts", {
-//     headers: {
-//       Authorization: `Bearer ${getJwtToken()}`,
-//     },
-//   }).then((post) => {
-//     post.json();
-//   })
-// }
+//FIXME: Back to top button not visible anymore
 
 function Home(props: UserProp) {
   const [isCreatingPost, setIsCreatingPost] = useState(false);
@@ -31,7 +21,7 @@ function Home(props: UserProp) {
 
   useEffect(() => {
     async function getPosts() {
-      const response = await fetch("http://localhost:3000/api/v1/posts", {
+      const response = await fetch("http://localhost:3000/api/v1/posts/" + user?._id, {
         headers: {
           Authorization: `Bearer ${getJwtToken()}`,
         },
