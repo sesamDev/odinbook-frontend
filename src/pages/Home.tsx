@@ -18,26 +18,24 @@ interface HomeProps {
 
 function Home(props: HomeProps) {
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [isViewingPost, setIsViewingPost] = useState(false);
+  const [focusedPost, setFocusedPost] = useState<string>("");
+  const [post, setPost] = useState<JSX.Element>();
   const [posts, setPosts] = useState<PostData[]>();
   const user = props.user;
 
   useEffect(() => {
-    async function getPosts() {
-      const response = await fetch("http://localhost:3000/api/v1/posts/" + user?._id, {
-        headers: {
-          Authorization: `Bearer ${getJwtToken()}`,
-        },
-      });
-      const posts = await response.json();
-      return posts;
-    }
-
-    getPosts().then((posts) => setPosts(posts));
+    getPosts(user).then((posts) => setPosts(posts));
   }, []);
+
+  useEffect(() => {
+    if (!focusedPost) return;
+    getOnePost(focusedPost, user, focusedPost, setIsViewingPost, setFocusedPost).then((p) => setPost(p));
+  }, [focusedPost]);
   return (
     <>
       <div className="app-home">
-        {isCreatingPost ? (
+        {isCreatingPost || isViewingPost ? (
           <></>
         ) : (
           <div className="home-add-post">
@@ -47,19 +45,67 @@ function Home(props: HomeProps) {
         )}
         {isCreatingPost ? <CreatePost setIsCreatingPost={setIsCreatingPost} user={user} /> : <></>}
         {posts?.map((post) => {
-          return (
-            <>
-              <Post post={post} user={user} key={post._id} />
-              <div className="app-line"></div>
-            </>
-          );
+          if (!focusedPost) {
+            return (
+              <>
+                <Post
+                  post={post}
+                  user={user}
+                  key={post._id}
+                  setIsViewingPost={setIsViewingPost}
+                  setFocusedPost={setFocusedPost}
+                  focusedPost={focusedPost}
+                />
+                <div className="app-line"></div>
+              </>
+            );
+          }
         })}
-        <div className="home-bottom" onClick={() => window.scrollTo(0, 0)}>
-          Back to top
-        </div>
+        {isViewingPost ? (
+          post
+        ) : (
+          <div className="home-bottom" onClick={() => window.scrollTo(0, 0)}>
+            Back to top
+          </div>
+        )}
       </div>
     </>
   );
 }
 
 export default Home;
+
+async function getPosts(user: CurrentUser) {
+  const response = await fetch("http://localhost:3000/api/v1/posts/" + user._id, {
+    headers: {
+      Authorization: `Bearer ${getJwtToken()}`,
+    },
+  });
+  const posts = await response.json();
+  return posts;
+}
+
+async function getOnePost(
+  postId: string,
+  user: CurrentUser,
+  focusedPost: string,
+  setIsViewinPost: CallableFunction,
+  setFocusedPost: CallableFunction
+): Promise<JSX.Element> {
+  const response = await fetch("http://localhost:3000/api/v1/posts/target/" + postId, {
+    headers: {
+      Authorization: `Bearer ${getJwtToken()}`,
+    },
+  });
+  const post = (await response.json()) as PostData;
+  return (
+    <Post
+      post={post}
+      user={post.author as CurrentUser}
+      key={post._id}
+      setIsViewingPost={setIsViewinPost}
+      setFocusedPost={setFocusedPost}
+      focusedPost={focusedPost}
+    />
+  );
+}

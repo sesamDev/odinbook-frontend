@@ -1,21 +1,34 @@
 import "../styles/Post.css";
 
-import { CurrentUser, PostData } from "../types";
-import React, { MouseEvent, useEffect, useState } from "react";
+import { CommentType, CurrentUser, PostData } from "../types";
+import React, { FormHTMLAttributes, MouseEvent, useEffect, useState } from "react";
 
+import Comment from "./Comment";
 import { fbColor } from "../App";
 import { getJwtToken } from "../auth";
 
 interface PostProps {
   post: PostData;
   user: CurrentUser;
+  focusedPost: string;
+  setIsViewingPost: CallableFunction;
+  setFocusedPost: CallableFunction;
+}
+
+interface CommentFormElements extends HTMLFormControlsCollection {
+  text: HTMLInputElement;
+}
+
+interface CFormElement extends HTMLFormElement {
+  readonly elements: CommentFormElements;
 }
 
 function Post(props: PostProps) {
-  const { post, user } = props;
+  const { post, user, setIsViewingPost, setFocusedPost, focusedPost } = props;
   const [postLikes, setPostLikes] = useState(() => post.likes.length);
   const [postLiked, setPostLiked] = useState<boolean>(false);
   const [postLikeButtonColor, setPostLikeButtonColor] = useState(() => "currentColor");
+  const [comments, setComments] = useState<CommentType[]>();
 
   function handleLikeButton(e: MouseEvent) {
     e.preventDefault();
@@ -36,6 +49,32 @@ function Post(props: PostProps) {
     setPostLiked(true);
   }
 
+  function handleCommentButton(e: MouseEvent) {
+    e.preventDefault();
+    const buttonElement = e.target as HTMLElement;
+    const postId = buttonElement.parentElement?.parentElement?.id;
+
+    console.log("Add comment on: ", postId);
+    setIsViewingPost(true);
+    setFocusedPost(postId);
+  }
+
+  function handleCommentSubmit(e: React.FormEvent<CFormElement>) {
+    e.preventDefault();
+    const text = e.currentTarget.elements.text.value;
+    console.log(post._id);
+    console.log(user._id);
+    fetch(
+      "http://localhost:3000/api/v1/posts/comment/add?postID=" + post._id + "&userID=" + user._id + "&text=" + text,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getJwtToken()}`,
+        },
+      }
+    );
+  }
+
   // Check if user has liked post before and light up like button
   useEffect(() => {
     if (post.likes.includes(user._id)) {
@@ -43,6 +82,13 @@ function Post(props: PostProps) {
       return setPostLiked(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (focusedPost) {
+      getComments(post._id).then((c) => setComments(c));
+    }
+  }, []);
+
   return (
     <div className="post-card" id={post._id}>
       <div className="post-profile">
@@ -75,15 +121,47 @@ function Post(props: PostProps) {
             />
           </svg>
         </button>
-        <button className="post-button-comment">
-          <svg width="32px" height="32px" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M10,16V19.08L13.08,16H20V4H4V16H10Z"
-            />
-          </svg>
-        </button>
+
+        {focusedPost ? (
+          //TODO: Add new icon, close button in post
+          <button
+            className="post-button-comment"
+            onClick={() => {
+              setIsViewingPost(false);
+              setFocusedPost("");
+            }}
+          >
+            Close
+          </button>
+        ) : (
+          <button className="post-button-comment" onClick={(e) => handleCommentButton(e)}>
+            <svg width="32px" height="32px" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22V22H9M10,16V19.08L13.08,16H20V4H4V16H10Z"
+              />
+            </svg>
+          </button>
+        )}
       </div>
+
+      {focusedPost ? (
+        <>
+          <p>Comments</p>
+
+          {comments?.map((comm) => {
+            return <Comment comment={comm} key={comm._id} />;
+          })}
+
+          <form className="post-comment-form" onSubmit={(e: React.FormEvent<CFormElement>) => handleCommentSubmit(e)}>
+            <label htmlFor="text">Add comment</label>
+            <input type="text" name="text" placeholder="Comment.." />
+            <button>Post</button>
+          </form>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
@@ -123,4 +201,17 @@ async function addLikeToDatabase(postId: string | undefined, userId: string | un
       Authorization: `Bearer ${getJwtToken()}`,
     },
   });
+}
+
+async function getComments(postID: string): Promise<CommentType[]> {
+  const response = await fetch("http://localhost:3000/api/v1/posts/comment/?postID=" + postID, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${getJwtToken()}`,
+    },
+  });
+
+  const comment = await response.json();
+
+  return comment;
 }

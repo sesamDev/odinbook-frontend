@@ -20,3 +20,12 @@ export type PostData = {
   likes: string[];
   timestamp: Date;
 };
+
+export type CommentType = {
+  _id: string;
+  text: string;
+  author: User;
+  related_post: string;
+  timestamp: Date;
+  likes: string[];
+};
