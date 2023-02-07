@@ -1,0 +1,20 @@
+.post-comment {
+  display: grid;
+  grid-template-columns: 0.1fr 0.9fr;
+}
+
+.comment-card {
+  background-color: rgb(241, 241, 241);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+  margin: 2px 4px;
+  padding: 4px;
+}
+
+.comment-card > .author {
+  font-weight: bold;
+}
+
+.comment-card > .timestamp {
+  font-size: 0.8rem;
+}
