@@ -59,12 +59,12 @@ function Post(props: PostProps) {
     setFocusedPost(postId);
   }
 
-  function handleCommentSubmit(e: React.FormEvent<CFormElement>) {
+  async function handleCommentSubmit(e: React.FormEvent<CFormElement>) {
     e.preventDefault();
     const text = e.currentTarget.elements.text.value;
     console.log(post._id);
     console.log(user._id);
-    fetch(
+    await fetch(
       "http://localhost:3000/api/v1/posts/comment/add?postID=" + post._id + "&userID=" + user._id + "&text=" + text,
       {
         method: "POST",
@@ -73,6 +73,7 @@ function Post(props: PostProps) {
         },
       }
     );
+    getComments(post._id).then((c) => setComments(c));
   }
 
   // Check if user has liked post before and light up like button
