@@ -14,7 +14,7 @@ function deleteJwtToken() {
 
 async function getCurrentUser(): Promise<CurrentUser> {
   const token = sessionStorage.getItem("jwt");
-  const response = await fetch("http://localhost:3000/api/v1/user", {
+  const response = await fetch(import.meta.env.VITE_API_URL + "user", {
     method: "GET",
     headers: {
       "Content-type": "application/json",

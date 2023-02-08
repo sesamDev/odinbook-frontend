@@ -21,7 +21,7 @@ function CreatePost(props: SetIsCreatingPostStateProp & UserProp) {
     e.preventDefault();
     props.setIsCreatingPost(false);
 
-    await fetch("http://localhost:3000/api/v1/posts", {
+    await fetch(import.meta.env.VITE_API_URL + "posts", {
       method: "POST",
       mode: "cors",
       headers: {

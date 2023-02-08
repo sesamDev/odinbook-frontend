@@ -76,7 +76,7 @@ function Home(props: HomeProps) {
 export default Home;
 
 async function getPosts(user: CurrentUser) {
-  const response = await fetch("http://localhost:3000/api/v1/posts/" + user._id, {
+  const response = await fetch(import.meta.env.VITE_API_URL + "posts/" + user._id, {
     headers: {
       Authorization: `Bearer ${getJwtToken()}`,
     },
@@ -92,7 +92,7 @@ async function getOnePost(
   setIsViewinPost: CallableFunction,
   setFocusedPost: CallableFunction
 ): Promise<JSX.Element> {
-  const response = await fetch("http://localhost:3000/api/v1/posts/target/" + postId, {
+  const response = await fetch(import.meta.env.VITE_API_URL + "posts/target/" + postId, {
     headers: {
       Authorization: `Bearer ${getJwtToken()}`,
     },
