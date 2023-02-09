@@ -1,3 +1,7 @@
+.friend-card > .requests {
+  margin: 5px;
+}
+
 .friend-card > .friend-info {
   display: flex;
   align-items: center;
@@ -16,4 +20,48 @@
 .num-of-friends {
   margin-top: 1rem;
   margin-left: 0.5rem;
+}
+
+.friend-request {
+  display: grid;
+  grid-template-columns: 0.1fr 0.8fr auto;
+  background-color: aliceblue;
+  align-items: center;
+  height: 64px;
+}
+
+.friend-request > p {
+  font-weight: bold;
+}
+
+.friend-request > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.friend-request > div > * {
+  /* background-color: rgb(149, 236, 149); */
+  border: none;
+  border-radius: 0.5rem;
+  padding: 5px;
+  margin: 0 4px;
+  width: 72px;
+  height: 48px;
+}
+
+.friend-request > div > :first-child {
+  background-color: rgb(149, 236, 149);
+}
+
+.friend-request > div > :last-child {
+  background-color: rgb(236, 149, 149);
+}
+
+.friend-request > div > :first-child:active {
+  background-color: rgb(128, 201, 128);
+}
+
+.friend-request > div > :last-child:active {
+  background-color: rgb(144, 76, 76);
 }
