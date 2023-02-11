@@ -101,7 +101,7 @@ async function getOnePost(
   return (
     <Post
       post={post}
-      user={post.author as CurrentUser}
+      user={user as CurrentUser}
       key={post._id}
       setIsViewingPost={setIsViewinPost}
       setFocusedPost={setFocusedPost}
