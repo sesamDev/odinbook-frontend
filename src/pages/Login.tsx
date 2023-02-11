@@ -15,7 +15,7 @@ interface LoginFormElement extends HTMLFormElement {
 }
 
 async function login(email: string, password: string) {
-  const response = await fetch("http://127.0.0.1:3000/api/v1/auth/login", {
+  const response = await fetch(import.meta.env.VITE_API_URL + "auth/login", {
     method: "POST",
     mode: "cors",
     headers: {

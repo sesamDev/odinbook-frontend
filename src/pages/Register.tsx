@@ -23,7 +23,7 @@ function Register() {
     const email: string = e.currentTarget.elements.email.value;
     const password: string = e.currentTarget.elements.password.value;
     const confirmPassword: string = e.currentTarget.elements.confirmPassword.value;
-    const response = await fetch("http://127.0.0.1:3000/api/v1/auth/register", {
+    const response = await fetch(import.meta.env.VITE_API_URL + "auth/register", {
       method: "POST",
       mode: "cors",
       headers: {
