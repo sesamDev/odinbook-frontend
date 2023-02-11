@@ -5,34 +5,8 @@ import { UserProp, fbColor } from "../App";
 
 import FriendInfo from "../components/FriendInfo";
 import FriendRequest from "../components/FriendRequest";
+import { User } from "../types";
 import { getJwtToken } from "../auth";
-
-//TODO: Implement friend request functionallity
-function Friends(props: UserProp) {
-  const { user } = props;
-  const [friendRequests, setFriendRequests] = useState<FriendRequestType[]>();
-  function countFriends(): number | undefined {
-    return user?.friends.length;
-  }
-
-  useEffect(() => {
-    getFriendRequests(user?._id).then((r) => setFriendRequests(r));
-  }, []);
-  return (
-    <div className="friend-card">
-      <h2 style={{ color: fbColor }} className="requests">
-        Friend requests
-      </h2>
-      {friendRequests?.map((r) => {
-        return <FriendRequest request={r} key={r._id} />;
-      })}
-      <div className="num-of-friends">{countFriends()} friends</div>
-      {user?.friends.map((u) => {
-        return <FriendInfo key={u._id} user={u} />;
-      })}
-    </div>
-  );
-}
 
 type FriendRequestType = {
   _id: string;
@@ -43,19 +17,72 @@ type FriendRequestType = {
   };
   reciever: string;
 };
-export default Friends;
 
-async function getFriendRequests(_id: string | undefined): Promise<FriendRequestType[] | undefined> {
-  if (_id === undefined) return;
+type FriendsType = User;
 
-  const token = getJwtToken();
-  const response = await fetch(import.meta.env.VITE_API_URL + "request/get/" + _id, {
-    method: "GET",
-    headers: {
-      "Content-type": "application/json",
-      Authorization: `Bearer ${token}`, // notice the Bearer before your token
-    },
-  });
+//TODO: Implement friend request functionallity
+function Friends(props: UserProp) {
+  const { user } = props;
+  const [friendRequests, setFriendRequests] = useState<FriendRequestType[]>();
+  const [friends, setFriends] = useState<FriendsType[]>();
+  console.log(friendRequests);
 
-  return response.json();
+  async function getFriendRequests(_id: string): Promise<void> {
+    const token = getJwtToken();
+    const response = await fetch(import.meta.env.VITE_API_URL + "request/get/" + _id, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`, // notice the Bearer before your token
+      },
+    });
+
+    const friendRequests = response.json();
+    friendRequests.then((req) => setFriendRequests(req));
+  }
+
+  async function getFriends(): Promise<void> {
+    const token = getJwtToken();
+    const response = await fetch(import.meta.env.VITE_API_URL + "user/friends", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`, // notice the Bearer before your token
+      },
+    });
+
+    const friends = response.json();
+    friends.then((f) => setFriends(f));
+  }
+
+  async function refetchAll(_id: string) {
+    const newList = friendRequests?.filter((friend) => friend.sender._id !== _id);
+    setFriendRequests(newList);
+    await getFriends();
+  }
+
+  useEffect(() => {
+    getFriendRequests(user._id);
+  }, []);
+
+  useEffect(() => {
+    getFriends();
+  }, []);
+
+  return (
+    <div className="friend-card">
+      <h2 style={{ color: fbColor }} className="requests">
+        Friend requests
+      </h2>
+      {friendRequests?.map((r) => {
+        return <FriendRequest refetch={refetchAll} request={r} key={r._id} />;
+      })}
+      <div className="num-of-friends">{friends?.length} friends</div>
+      {friends?.map((u) => {
+        return <FriendInfo key={u._id} user={u} />;
+      })}
+    </div>
+  );
 }
+
+export default Friends;

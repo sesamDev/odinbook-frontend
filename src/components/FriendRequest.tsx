@@ -1,4 +1,5 @@
 import React from "react";
+import { findDOMNode } from "react-dom";
 import { getJwtToken } from "../auth";
 
 interface IfriendRequest {
@@ -11,19 +12,35 @@ interface IfriendRequest {
     };
     reciever: string;
   };
+  refetch: CallableFunction;
 }
 
 function FriendRequest(props: IfriendRequest) {
   const { sender, reciever } = props.request;
+  const { refetch } = props;
   return (
     <div className="friend-request">
       <img src="/" alt="avatar" />
       <p>{sender.first_name + " " + sender.last_name}</p>
       <div>
-        <button className="friend-request-button" type="button" onClick={() => acceptRequest(sender._id)}>
+        <button
+          className="friend-request-button"
+          type="button"
+          onClick={() => {
+            acceptRequest(sender._id);
+            refetch(sender._id);
+          }}
+        >
           Accept
         </button>
-        <button className="friend-request-button" type="button" onClick={() => declineRequest(props.request._id)}>
+        <button
+          className="friend-request-button"
+          type="button"
+          onClick={() => {
+            declineRequest(props.request._id);
+            refetch(sender._id);
+          }}
+        >
           Reject
         </button>
       </div>
@@ -46,13 +63,12 @@ async function acceptRequest(senderId: string): Promise<void> {
 }
 
 async function declineRequest(requestId: string): Promise<void> {
-  // delete request
-  // const token = getJwtToken();
-  // fetch(import.meta.env.VITE_API_URL + "request/decline/" + requestId, {
-  //   method: "DELETE",
-  //   headers: {
-  //     "Content-type": "application/json",
-  //     Authorization: `Bearer ${token}`, // notice the Bearer before your token
-  //   },
-  // });
+  const token = getJwtToken();
+  fetch(import.meta.env.VITE_API_URL + "request/decline/" + requestId, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`, // notice the Bearer before your token
+    },
+  });
 }

@@ -14,7 +14,7 @@ import { getCurrentUser } from "./auth";
 export const fbColor = "rgb(57 117 234)";
 
 export interface UserProp {
-  readonly user: undefined | CurrentUser;
+  readonly user: CurrentUser;
 }
 
 export interface SetUserStateProp {
