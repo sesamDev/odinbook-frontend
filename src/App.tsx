@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CurrentUser } from "./types";
 import Friends from "./pages/Friends";
 import Home from "./pages/Home";
+import Loading from "./pages/Loading";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
@@ -19,10 +20,12 @@ export interface UserProp {
 
 export interface SetUserStateProp {
   setUser: CallableFunction;
+  setIsLoading: CallableFunction;
 }
 
 function App() {
   const [user, setUser] = useState<CurrentUser>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getCurrentUser().then((user) => setUser(user));
@@ -30,10 +33,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      {user ? <Navbar setUser={setUser} /> : null}
+      {user ? <Navbar setUser={setUser} setIsLoading={setIsLoading} /> : null}
+      {isLoading ? <Loading /> : <></>}
       <Routes>
-        <Route path="/" element={user ? <Home user={user} /> : <Navigate to="/login" />} />
-        <Route path="/login" element={user ? <Navigate to="/" /> : <Login setUser={setUser} />} />
+        <Route path="/" element={user ? <Home user={user} setIsLoading={setIsLoading} /> : <Navigate to="/login" />} />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" /> : <Login setUser={setUser} setIsLoading={setIsLoading} />}
+        />
         <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
         <Route path="/friends" element={user ? <Friends user={user} /> : <Navigate to="/login" />} />
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />

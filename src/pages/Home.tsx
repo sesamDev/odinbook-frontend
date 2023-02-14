@@ -14,9 +14,11 @@ import { getJwtToken } from "../auth";
 
 interface HomeProps {
   user: CurrentUser;
+  setIsLoading: CallableFunction;
 }
 
 function Home(props: HomeProps) {
+  const { setIsLoading } = props;
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const [isViewingPost, setIsViewingPost] = useState(false);
   const [focusedPost, setFocusedPost] = useState<string>("");
@@ -26,6 +28,10 @@ function Home(props: HomeProps) {
 
   useEffect(() => {
     getPosts(user).then((posts) => setPosts(posts));
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {

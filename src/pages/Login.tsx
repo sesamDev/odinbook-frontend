@@ -32,6 +32,8 @@ async function login(email: string, password: string) {
 
 //TODO: Get Facebook login to work
 function Login(props: SetUserStateProp) {
+  const { setIsLoading } = props;
+
   async function handleSubmit(e?: React.FormEvent<LoginFormElement>) {
     let email: string;
     let password: string;
@@ -49,6 +51,7 @@ function Login(props: SetUserStateProp) {
     if (email === undefined || password === undefined) {
       throw new Error("Login error");
     }
+    setIsLoading(true);
     const auth = await login(email, password);
     setJwtToken(auth.token);
     const user = await getCurrentUser();
