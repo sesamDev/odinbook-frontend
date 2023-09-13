@@ -10,9 +10,12 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import React from "react";
 import Register from "./pages/Register";
+import { firebaseConfig } from "./config/firebase";
 import { getCurrentUser } from "./auth";
+import { initializeApp } from "firebase/app";
 
 export const fbColor = "rgb(57 117 234)";
+export const firebase = initializeApp(firebaseConfig);
 
 export interface UserProp {
   readonly user: CurrentUser;

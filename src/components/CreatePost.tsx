@@ -1,5 +1,7 @@
 import "../styles/CreatePost.css";
 
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
 import React from "react";
 import { UserProp } from "../App";
 import { getJwtToken } from "../auth";
@@ -10,6 +12,7 @@ interface SetIsCreatingPostStateProp {
 
 interface FormElements extends HTMLFormControlsCollection {
   text: HTMLInputElement;
+  imageFile: HTMLInputElement;
 }
 
 interface PostFormElement extends HTMLFormElement {
@@ -17,9 +20,28 @@ interface PostFormElement extends HTMLFormElement {
 }
 
 function CreatePost(props: SetIsCreatingPostStateProp & UserProp) {
+  let firebaseImageURL = "";
+
+  async function uploadImage(img: File) {
+    const storage = getStorage();
+    const image = img.name + Date.now();
+    const storageRef = ref(storage, image);
+
+    // 'file' comes from the Blob or File API
+    await uploadBytes(storageRef, img).then(() => {
+      console.log("Uploaded a blob or file!");
+    });
+    await getDownloadURL(ref(storage, image)).then((url) => {
+      firebaseImageURL = url;
+    });
+  }
+
   async function handleSubmit(e: React.FormEvent<PostFormElement>) {
     e.preventDefault();
-    props.setIsCreatingPost(false);
+    const textInput = e.currentTarget.elements.text.value;
+    if (e.currentTarget.elements.imageFile.files !== null) {
+      await uploadImage(e.currentTarget.elements.imageFile.files[0]);
+    }
 
     await fetch(import.meta.env.VITE_API_URL + "posts", {
       method: "POST",
@@ -29,10 +51,12 @@ function CreatePost(props: SetIsCreatingPostStateProp & UserProp) {
         Authorization: `Bearer ${getJwtToken()}`,
       },
       body: JSON.stringify({
-        text: e.currentTarget.elements.text.value,
+        text: textInput,
         author: props.user?._id,
+        imgURL: firebaseImageURL,
       }),
     });
+    props.setIsCreatingPost(false);
   }
   return (
     <>
@@ -46,7 +70,7 @@ function CreatePost(props: SetIsCreatingPostStateProp & UserProp) {
           </div>
           <div>
             <label className="create-post-upload-image" htmlFor="image"></label>
-            <input type="file" />
+            <input type="file" name="imageFile" />
           </div>
           <button>Publish</button>
         </form>

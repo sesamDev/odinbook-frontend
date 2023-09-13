@@ -8,8 +8,6 @@ import Post from "../components/Post";
 import React from "react";
 import { getJwtToken } from "../auth";
 
-//TODO: Add images to posts
-//TODO: Add comment functionallity
 //FIXME: Back to top button not visible anymore
 
 interface HomeProps {
@@ -40,7 +38,7 @@ function Home(props: HomeProps) {
   }, [focusedPost]);
   return (
     <>
-      <div className="app-home">
+      <div className="app-home" key={"app-home"}>
         {isCreatingPost || isViewingPost ? (
           <></>
         ) : (

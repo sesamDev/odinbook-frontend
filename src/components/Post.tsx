@@ -1,12 +1,25 @@
 import "../styles/Post.css";
 
-import { CommentType, CurrentUser, PostData } from "../types";
+import { CommentType, CurrentUser } from "../types";
 import React, { MouseEvent, useEffect, useState } from "react";
 
 import Comment from "./Comment";
 import PostButton from "./buttons/PostButton";
 import { fbColor } from "../App";
 import { getJwtToken } from "../auth";
+
+type PostData = {
+  _id: string;
+  author: {
+    _id: string;
+    first_name: string;
+    last_name: string;
+  };
+  text: string;
+  imgURL: string;
+  likes: string[];
+  timestamp: Date;
+};
 
 interface PostProps {
   post: PostData;
@@ -100,8 +113,7 @@ function Post(props: PostProps) {
       </div>
       <div className="post-text">{post.text}</div>
       <div className="post-img">
-        {/* TODO: Add image */}
-        <img src={""} alt="" />
+        <img src={post.imgURL} alt="uploaded by user" />
       </div>
       <div className="post-likes">
         <svg width="24px" height="24px" viewBox="0 0 24 24">
